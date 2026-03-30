@@ -19,6 +19,10 @@ namespace HMS
             string[] departments = new string[100]; // e.g. Cardiology, Orthopedics
             int[] visitCount = new int[100]; // total times admitted
             double[] billingAmount = new double[100]; // cumulative fees
+            string[] appointmentDates = new string[100]; // e.g. "2025-09-15"
+            string[] appointmentDoctors = new string[100]; // doctor for the appointment
+            string[] appointmentDepts = new string[100]; // department for the appointment
+            bool[] hasAppointment = new bool[100]; // true = appointment booked
             int lastPatientIndex = 0;
 
 
@@ -32,7 +36,10 @@ namespace HMS
             assignedDoctors[lastPatientIndex] = " ";
             visitCount[lastPatientIndex] = 2;
             billingAmount[lastPatientIndex] = 0;
-
+            appointmentDates[lastPatientIndex] = "2025-06-10";
+            appointmentDoctors[lastPatientIndex] = " ";
+            appointmentDepts[lastPatientIndex] = "General ";
+            hasAppointment[lastPatientIndex]= false;
             lastPatientIndex++;
 
 
@@ -45,7 +52,10 @@ namespace HMS
             assignedDoctors[lastPatientIndex] = "Dr. Noor";
             visitCount[lastPatientIndex] = 4;
             billingAmount[lastPatientIndex] = 0;
-
+            appointmentDates[lastPatientIndex] = "2025-03-11";
+            appointmentDoctors[lastPatientIndex] = " Dr. Noor";
+            appointmentDepts[lastPatientIndex] = "OrthopedicsGeneral ";
+            hasAppointment[lastPatientIndex] = true;
             lastPatientIndex++;
 
             //patient 3
@@ -57,7 +67,10 @@ namespace HMS
             assignedDoctors[lastPatientIndex] = null;
             visitCount[lastPatientIndex] = 1;
             billingAmount[lastPatientIndex] = 0;
-
+            appointmentDates[lastPatientIndex] = "2025-10-09";
+            appointmentDoctors[lastPatientIndex] = "  ";
+            appointmentDepts[lastPatientIndex] = "Cardiology ";
+            hasAppointment[lastPatientIndex] = false;
             lastPatientIndex++;
 
 
@@ -77,7 +90,8 @@ namespace HMS
                 Console.WriteLine("7. View Most Visited Patients");
                 Console.WriteLine("8. Search Patients by Department");
                 Console.WriteLine("9. Billing Report");
-                Console.WriteLine("10. Exit");
+                Console.WriteLine("10. Schedule Appointment");
+                Console.WriteLine("11. Exit");
 
                 Console.Write("Choose option: ");
                 int choice = int.Parse(Console.ReadLine());
@@ -313,7 +327,7 @@ namespace HMS
                         {
                             assignedDoctors[currentDoctorIndex] = newDoctorName;
                             Console.WriteLine("Doctors transferred successfully!");
-                            Console.WriteLine("Doctor " + patientNames[currentDoctorIndex] + "' is now assigned to " + newDoctorName);
+                            Console.WriteLine("Patient " + patientNames[currentDoctorIndex] + "' is now assigned to " + newDoctorName);
                         }
 
                         break;
@@ -416,7 +430,52 @@ namespace HMS
                         }
 
                         break;
+
                     case 10:
+                        //Schedule Appointment
+                        Console.Write("Enter patient ID or  patient name: ");
+                        string input2 = Console.ReadLine();
+                        bool found2 = false;
+                        for (int i = 0; i <= lastPatientIndex; i++)
+                        {
+
+
+                            if (input2 == patientIDs[i] || input2 == patientNames[i])
+                            {
+                                found2 = true;
+                                if (hasAppointment[i] = false)
+                                {
+                                    Console.WriteLine("Patient already has an appointment on"+ appointmentDates[i]);
+
+
+                                }
+                                //on success
+                                else
+                                {
+                                    Console.WriteLine("Enter appointment Date: ");
+                                    string appointmentDate = Console.ReadLine();
+                                    Console.WriteLine("Enter Doctor name for appointment");
+                                    string DoctorAppoinment = Console.ReadLine();
+                                    Console.WriteLine(" Enter department for appoinment");
+                                    string departmentAppoinmment=Console.ReadLine();
+
+                                    hasAppointment[i] = true;
+                                    appointmentDates[i] = appointmentDate;
+                                    appointmentDoctors[i] = DoctorAppoinment;
+                                    appointmentDepts[i] = departmentAppoinmment;
+                                }
+
+                                Console.WriteLine("Appointment scheduled for "+ patientNames[i]+" on "+ appointmentDates[i]+" with DR. "+ appointmentDoctors[i]+" in department "+ appointmentDepts[i]);
+                                break;
+                            }
+                        }
+
+                        if (found2 == false)
+                        {
+                            Console.WriteLine("Patient not found");
+                        }
+                        break;
+                    case 11:
                         //exit operation
                         Console.WriteLine("Exiting program...");
                         Console.WriteLine("Thank you for using Hospital Management System!");
