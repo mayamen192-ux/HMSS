@@ -65,6 +65,7 @@ namespace HMS
             bool exit = false;
             while (exit == false)
             {
+                //menue
                 Console.WriteLine("===== Hospital Management System  =====");
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine("1. Register New Patient");
@@ -87,16 +88,16 @@ namespace HMS
                         //Register New Patient
                         lastPatientIndex++;
 
-                        Console.Write("patientNames: ");
+                        Console.Write("patient Name: ");
                         patientNames[lastPatientIndex] = Console.ReadLine();
-                        Console.Write("patientIDs: ");
+                        Console.Write("patient ID: ");
                         patientIDs[lastPatientIndex] = Console.ReadLine();
                         Console.Write("diagnoses: ");
                         diagnoses[lastPatientIndex] = Console.ReadLine();
-                        Console.Write("departments: ");
+                        Console.Write("department: ");
                         departments[lastPatientIndex] = Console.ReadLine();
                         admitted[lastPatientIndex] = false;
-                        Console.Write("assignedDoctors: ");
+                        Console.Write("assignedDoctor: ");
                         assignedDoctors[lastPatientIndex] = Console.ReadLine();
                         visitCount[lastPatientIndex] = 0;
                         billingAmount[lastPatientIndex] = 0;
@@ -116,6 +117,7 @@ namespace HMS
                         bool admitFound = false;
                         for (int i = 0; i <= lastPatientIndex; i++)
                         {
+                            //check if patient is found or not
                             if (patientNames[i] == admitInput || patientIDs[i] == admitInput)
                             {
 
@@ -385,18 +387,19 @@ namespace HMS
                                 bool found = false;
                                 for (int i = 0; i <= lastPatientIndex; i++)
                                 {
-                                    found = true;
+                                   
 
-                                    if (billingAmount[i] > 0)
+                                    if(input == patientIDs[i] ||  input == patientNames[i])
                                     {
+                                        found = true;
+                                        
                                         Console.WriteLine("Billing amount for " + patientNames[i] + ": " + billingAmount[i] + " OMR");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("No billing records found for this patient");
+
+                                        break;
                                     }
 
-                                    break;
+
+                              
                                 }
 
 
@@ -405,6 +408,8 @@ namespace HMS
                                     Console.WriteLine("No billing records found for this patient");
                                 }
                                 break;
+
+
                             default:
                                 Console.WriteLine("Invalid option");
                                 break;
