@@ -71,7 +71,7 @@ namespace HMS
             appointmentDoctors[lastPatientIndex] = "  ";
             appointmentDepts[lastPatientIndex] = "Cardiology ";
             hasAppointment[lastPatientIndex] = false;
-            lastPatientIndex++;
+          
 
 
 
@@ -92,6 +92,7 @@ namespace HMS
                 Console.WriteLine("9. Billing Report");
                 Console.WriteLine("10. Schedule Appointment");
                 Console.WriteLine("11. Exit");
+                Console.WriteLine("12:RunTime:");
 
                 Console.Write("Choose option: ");
                 int choice = int.Parse(Console.ReadLine());
@@ -104,8 +105,8 @@ namespace HMS
 
                         Console.Write("patient Name: ");
                         patientNames[lastPatientIndex] = Console.ReadLine();
-                        Console.Write("patient ID: ");
-                        patientIDs[lastPatientIndex] = Console.ReadLine();
+                        //Console.Write("patient ID: ");
+                        //patientIDs[lastPatientIndex] = Console.ReadLine();
                         Console.Write("diagnoses: ");
                         diagnoses[lastPatientIndex] = Console.ReadLine();
                         Console.Write("department: ");
@@ -116,10 +117,34 @@ namespace HMS
                         visitCount[lastPatientIndex] = 0;
                         billingAmount[lastPatientIndex] = 0;
 
-                        Console.WriteLine("Patient registered successfully!");
+                        patientIDs[lastPatientIndex] = "P00" + lastPatientIndex;
+                        Console.WriteLine("Patient registered successfully with ID"+ patientIDs[lastPatientIndex]);
 
+                        //runtime  type 1:Try-Catch Block 
 
+                        //try
+                        //{
+                        //    int divisor = 0;
+                        //    int result = 10 / divisor;
+                        //    Console.WriteLine(result);
+                        //}
+                        //catch (DivideByZeroException ex)
+                        //{ Console.WriteLine("Error: " + ex.Message); 
+                        //}
+                        try { 
+                        Console.Write("Enter a number: ");
+                        string inputs = Console.ReadLine();
+                        
+                       
+                            int number = int.Parse(inputs);  // throws FormatException if not integer
+                            Console.WriteLine("You entered: " + number);
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Error: Please enter a valid integer.");
+                        }
                         break;
+                       
                     case 2:
                         //Admit Patient
                         Console.Write("Enter patient ID or name: ");
@@ -161,6 +186,8 @@ namespace HMS
                             Console.WriteLine("Patient not found");
 
                         }
+                        //runtime
+
                         break;
                     case 3:
                         //Discharge Patient
@@ -481,6 +508,18 @@ namespace HMS
                         Console.WriteLine("Thank you for using Hospital Management System!");
                         Console.WriteLine("----------------------------------------");
                         exit = true;
+                        break;
+
+                        case 12:
+                        try
+                        {
+                            int divisor = 0;
+                            int result = 10 / divisor;
+                            Console.WriteLine(result);
+                        }
+                        catch (DivideByZeroException ex)
+                        { Console.WriteLine("Error: " + ex.Message); }
+
                         break;
 
                     default:
