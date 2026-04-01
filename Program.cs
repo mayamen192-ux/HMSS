@@ -95,22 +95,18 @@ namespace HMS
                 Console.WriteLine("12:RunTime:");
 
                 Console.Write("Choose option: ");
-                //runtime error handle in case user enter string instead of enterger number
+                int choice=0;
                 try
                 {
-                    Console.Write("Enter a number: ");
-                    string inputs = Console.ReadLine();
 
-
-                    int number = int.Parse(inputs);  // throws FormatException if not integer
-                    Console.WriteLine("You entered: " + number);
+                    choice = int.Parse(Console.ReadLine());
                 }
-                catch (FormatException)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: Please enter a valid integer.");
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Invalid input. Please choose a number\r\nfrom 1 to 10");
+
                 }
-                int choice = int.Parse(Console.ReadLine());
-                
 
                 switch (choice)
                 {
@@ -134,18 +130,6 @@ namespace HMS
 
                         patientIDs[lastPatientIndex] = "P00" + lastPatientIndex;
                         Console.WriteLine("Patient registered successfully with ID"+ patientIDs[lastPatientIndex]);
-
-                        //runtime  type 1:Try-Catch Block 
-
-                        //try
-                        //{
-                        //    int divisor = 0;
-                        //    int result = 10 / divisor;
-                        //    Console.WriteLine(result);
-                        //}
-                        //catch (DivideByZeroException ex)
-                        //{ Console.WriteLine("Error: " + ex.Message); 
-                        //}
                         
                         break;
                        
