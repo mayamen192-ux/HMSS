@@ -95,7 +95,22 @@ namespace HMS
                 Console.WriteLine("12:RunTime:");
 
                 Console.Write("Choose option: ");
+                //runtime error handle in case user enter string instead of enterger number
+                try
+                {
+                    Console.Write("Enter a number: ");
+                    string inputs = Console.ReadLine();
+
+
+                    int number = int.Parse(inputs);  // throws FormatException if not integer
+                    Console.WriteLine("You entered: " + number);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Error: Please enter a valid integer.");
+                }
                 int choice = int.Parse(Console.ReadLine());
+                
 
                 switch (choice)
                 {
@@ -131,18 +146,7 @@ namespace HMS
                         //catch (DivideByZeroException ex)
                         //{ Console.WriteLine("Error: " + ex.Message); 
                         //}
-                        try { 
-                        Console.Write("Enter a number: ");
-                        string inputs = Console.ReadLine();
                         
-                       
-                            int number = int.Parse(inputs);  // throws FormatException if not integer
-                            Console.WriteLine("You entered: " + number);
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Error: Please enter a valid integer.");
-                        }
                         break;
                        
                     case 2:
