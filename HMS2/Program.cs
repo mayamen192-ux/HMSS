@@ -1,4 +1,7 @@
-﻿namespace HMS2
+﻿using System.Diagnostics.Metrics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace HMS2
 {
     internal class Program
     {
@@ -17,6 +20,9 @@
 
 
             DateTime[] lastVisitDate = new DateTime[100];
+            DateTime[] lastDischargeDate= new DateTime[100];
+            int[]daysInHospital= new int[100];
+            string[]bloodType= new string[100];
 
 
             // Patient[] patients = new Patient[100];
@@ -37,8 +43,10 @@
             assignedDoctors[lastIndex] = "";
             visitCount[lastIndex] = 2;
             billingAmount[lastIndex] = 0;
-            lastVisitDate[lastIndex] = DateTime.Today;
-
+            lastVisitDate[lastIndex] = DateTime.Parse("2025-01-10");
+            lastDischargeDate[lastIndex]= DateTime.Parse("2025-01-15");
+            daysInHospital[lastIndex] = 12;
+            bloodType[lastIndex] = "A+";
             lastIndex++;
 
             patientNames[lastIndex] = "Sara Ahmed";
@@ -49,7 +57,10 @@
             assignedDoctors[lastIndex] = "Dr. Noor";
             visitCount[lastIndex] = 4;
             billingAmount[lastIndex] = 0;
-
+            lastVisitDate[lastIndex] = DateTime.Parse("2025-03-02");
+            lastDischargeDate[lastIndex] = DateTime.Today;
+            daysInHospital[lastIndex] = 8;
+            bloodType[lastIndex] = "O-";
             lastIndex++;
 
             patientNames[lastIndex] = "Omar Khalid";
@@ -60,6 +71,10 @@
             assignedDoctors[lastIndex] = "";
             visitCount[lastIndex] = 1;
             billingAmount[lastIndex] = 0;
+            lastVisitDate[lastIndex] = DateTime.Parse("2024-12-20");
+            lastDischargeDate[lastIndex] = DateTime.Parse("2024-12-28");
+            daysInHospital[lastIndex] = 5;
+            bloodType[lastIndex] = "B+";
             ////////////////////////////////////////////////////////////////////
 
 
@@ -126,7 +141,11 @@
                         assignedDoctors[lastIndex] = "";
                         visitCount[lastIndex] = 0;
                         billingAmount[lastIndex] = 0;
-
+                        Console.Write("blood Type: ");
+                        bloodType[lastIndex] = Console.ReadLine();
+                        lastVisitDate[lastIndex] = DateTime.Today;
+                        lastDischargeDate[lastIndex] = DateTime.Today;
+                        daysInHospital[lastIndex] = 0;
                         Console.WriteLine("Patient registered successfully with ID :" + patientIDs[lastIndex]);
                         break;
 
@@ -138,7 +157,7 @@
 
                         for (int i = 0; i <= lastIndex; i++)
                         {
-                            if (patientNames[i] == admitInput || patientIDs[i] == admitInput)
+                            if (patientNames[i].ToLower() == admitInput.ToLower() || patientIDs[i].ToLower() == admitInput.ToLower())
                             {
                                 admitFound = true;
 
@@ -147,16 +166,28 @@
                                     Console.Write("Doctor Name: ");
                                     assignedDoctors[i] = Console.ReadLine();
 
+                                    Console.Write("Enter the admission date: ");
+                                    DateTime admissionDate;
+                                    //TryParse tries to convert the text,if successful It stores the result inside admissionDate and return true
+                                    //if fails:return false,and  get admission Date default value
+
+                                    if (!DateTime.TryParse(Console.ReadLine(), out admissionDate))
+                                    {
+                                        Console.WriteLine("Invalid date. Using today's date.");
+                                        admissionDate = DateTime.Today;
+                                    }
+
                                     admitted[i] = true;
                                     visitCount[i]++;
-                                    lastVisitDate[i] = DateTime.Now;
+                                    lastVisitDate[i] = admissionDate;
 
                                     Console.WriteLine("Patient admitted successfully and assigned to " + assignedDoctors[i]);
 
                                     if (visitCount[i] > 1)
-                                        Console.WriteLine("This patient has been admitted " + visitCount[i] + " times");
+                                        Console.WriteLine("This patient has been admitted " + visitCount[i] + " times. Last admission date: " + lastVisitDate[i]);
                                     else
-                                        Console.WriteLine("this is first time");
+                                        Console.WriteLine("This is the first time.");
+
                                 }
                                 else
                                 {
@@ -167,11 +198,10 @@
                             }
                         }
 
-                        if (admitFound == false)
+                        if (!admitFound)
                         {
-                            Console.WriteLine("Patient not found");
+                            Console.WriteLine("Patient not found.");
                         }
-
                         break;
 
                     case 3: // Discharge Patient
@@ -182,91 +212,87 @@
 
                         for (int i = 0; i <= lastIndex; i++)
                         {
-                            if (patientNames[i] == dischargeInput || patientIDs[i] == dischargeInput)
+                            if (patientNames[i].ToLower() == dischargeInput.ToLower() ||
+                                patientIDs[i].ToLower() == dischargeInput.ToLower())
                             {
                                 dischargeFound = true;
 
-                                if (admitted[i] == true)
+                                if (!admitted[i])
                                 {
-                                    double visitCharges = 0;
+                                    Console.WriteLine("This patient is not currently admitted");
+                                    break;
+                                }
 
-                                    Console.Write("Was there a consultation fee? (yes/no): ");
-                                    string hasFee = Console.ReadLine().ToLower();
+                                double visitCharges = 0;
 
-                                    if (hasFee == "yes")
+                                Console.Write("Enter the discharge date: ");
+                                DateTime dischargeDate;
+
+                                if (!DateTime.TryParse(Console.ReadLine(), out dischargeDate))
+                                {
+                                    Console.WriteLine("Invalid date. Using today's date.");
+                                    dischargeDate = DateTime.Today;
+                                }
+
+                                lastDischargeDate[i] = dischargeDate;
+
+                                Console.Write("Was there a consultation fee? (yes/no): ");
+                                string hasFee = Console.ReadLine().ToLower();
+
+                                if (hasFee == "yes")
+                                {
+                                    Console.Write("Enter consultation fee amount: ");
+                                    if (double.TryParse(Console.ReadLine(), out double fee) && fee > 0)
                                     {
-                                        Console.Write("Enter consultation fee amount: ");
-                                        double fee = 0;
-                                        try
-                                        {
-                                            fee = double.Parse(Console.ReadLine());
-                                            if (fee > 0)
-                                            {
-                                                billingAmount[i] += fee;
-                                                visitCharges += fee;
-                                            }
-                                            else
-                                            {
-                                                Console.WriteLine("fee amount must be posititve");
-                                            }
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Console.WriteLine("Invalid amount. Please enter a valid number.");
-                                        }
-                                    }
-
-                                    Console.Write("Any medication charges? (yes/no): ");
-                                    string hasMeds = Console.ReadLine().ToLower();
-
-                                    if (hasMeds == "yes")
-                                    {
-                                        Console.Write("Enter medication charges amount: ");
-                                        double meds = 0;
-                                        try
-                                        {
-                                            meds = double.Parse(Console.ReadLine());
-                                            billingAmount[i] += meds;
-                                            visitCharges += meds;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Console.WriteLine(e.Message);
-                                            Console.WriteLine("Invalid amount. Please enter a valid\r\nnumber.");
-                                        }
-                                    }
-                                    if (visitCharges > 0)
-                                    {
-                                        Console.WriteLine("Total charges added this visit: " + visitCharges + " OMR");
+                                        billingAmount[i] += fee;
+                                        visitCharges += fee;
                                     }
                                     else
                                     {
-                                        Console.WriteLine("No charges recorded for this visit");
+                                        Console.WriteLine("Fee must be a positive number.");
                                     }
+                                }
 
-                                    admitted[i] = false;
-                                    assignedDoctors[i] = "";
+                                Console.Write("Any medication charges? (yes/no): ");
+                                string hasMeds = Console.ReadLine().ToLower();
 
-                                    Console.WriteLine("Patient discharged successfully!");
+                                if (hasMeds == "yes")
+                                {
+                                    Console.Write("Enter medication charges amount: ");
+                                    if (double.TryParse(Console.ReadLine(), out double meds) && meds > 0)
+                                    {
+                                        billingAmount[i] += meds;
+                                        visitCharges += meds;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid amount.");
+                                    }
+                                }
+
+                                if (visitCharges > 0)
+                                {
+                                    Console.WriteLine("Total charges added this visit: " + visitCharges + " OMR"+ " and  patient's updated total days in hospital:" + dischargeDate);
                                 }
                                 else
                                 {
-                                    Console.WriteLine("This patient is not currently admitted");
+                                    Console.WriteLine("No charges recorded for this visit");
                                 }
 
+                                admitted[i] = false;
+                                assignedDoctors[i] = "";
+
+                                Console.WriteLine("Patient discharged successfully!");
                                 break;
                             }
                         }
 
-                        if (dischargeFound == false)
+                        if (!dischargeFound)
                         {
                             Console.WriteLine("Patient not found");
                         }
 
                         break;
-
-
-
 
                     case 4: // Search Patient
                         Console.Write("Enter Patient ID or Name: ");
@@ -288,8 +314,27 @@
                                 Console.WriteLine("ID:             " + patientIDs[i]);
                                 Console.WriteLine("Diagnosis:      " + diagnoses[i]);
                                 Console.WriteLine("Department:     " + departments[i]);
+                                Console.WriteLine(" blood Type:    " + bloodType[i]);
                                 Console.WriteLine("Admitted:       " + admitted[i]);
                                 Console.WriteLine("Total Visits:   " + visitCount[i]);
+                                if (lastVisitDate[i] == null)
+                                {
+                                    Console.WriteLine("No admission recorded");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Last visit date: " + lastVisitDate[i]);
+                                }
+                                if (lastDischargeDate[i] == null)
+                                {
+                                    Console.WriteLine("No admission recorded");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Last visit date: " + lastDischargeDate[i]);
+                                }
+                                Console.WriteLine("Total Days in Hospital:   " + daysInHospital[i]);
+
                                 Console.WriteLine("Total Billing:  " + billingAmount[i] + " OMR");
                                 //logical error handled 
                                 //print doctor name if patient is admitted
@@ -328,7 +373,7 @@
                         {
                             if (admitted[i] == true)
                             {
-                                Console.WriteLine("Name: " + patientNames[i] + " | ID: " + patientIDs[i] + " | Diagnosis: " + diagnoses[i] + " | Department: " + departments[i] + " | Doctor: " + assignedDoctors[i]);
+                                Console.WriteLine("Name: " + patientNames[i] + " | ID: " + patientIDs[i] + " | Diagnosis: " + diagnoses[i] + " | Department: " + departments[i] + " | Doctor: " + assignedDoctors[i]+ " |  Admitted\r\nSince: " + lastVisitDate[i]);
                                 hasAdmitted = true;
                                 admittedCounter++;
 
@@ -371,7 +416,7 @@
                                 {
                                     doctorFound = true;
                                     assignedDoctors[i] = newDoctor;
-                                    Console.WriteLine("Patient '" + patientNames[i] + "' has been transferred to " + newDoctor);
+                                    Console.WriteLine("Patient " + patientNames[i] + " has been transferred to " + newDoctor+ "  and Patient last admitted on:"+ lastVisitDate[i]);
                                 }
                             }
                         }
@@ -439,7 +484,7 @@
                                 //    stat = "not admitted";
 
 
-                                Console.WriteLine("ID: " + patientIDs[i] + " | Name: " + patientNames[i] + " | Diagnosis: " + diagnoses[i] + " | Status: " + status);
+                                Console.WriteLine("ID: " + patientIDs[i] + " | Name: " + patientNames[i] + " | Diagnosis: " + diagnoses[i] + " | Status: " + status+ " | bloodType:" + bloodType[i]);
                             }
                         }
 
@@ -492,7 +537,7 @@
                                     {
                                         billingFound = true;
                                         Console.WriteLine("----------------------------------------");
-                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR");
+                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR"+ "Last Visit Date: "+ lastVisitDate[i]+ " Total Days: "+ daysInHospital[i]);
                                     }
                                 }
                             }
@@ -524,8 +569,12 @@
                             exit = true;
                             break;
                         }
-                       
-                        break;
+                        else
+                        {
+                            Console.WriteLine("return to the menu");
+                        }
+
+                            break;
                             default:
                         Console.WriteLine("Invalid option. Please try again.");
                         break;
