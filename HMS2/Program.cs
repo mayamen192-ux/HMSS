@@ -510,7 +510,7 @@ namespace HMS2
                             Console.WriteLine(e.Message);
                             Console.WriteLine("Invalid input. Please enter 1 or 2.");
                         }
-
+                        bool billingFound = false;
                         if (billingOption == 1)
                         {
                             double totalBilling = 0;
@@ -528,35 +528,40 @@ namespace HMS2
                             Console.Write("Enter Patient ID or Name: ");
                             string billingInput = Console.ReadLine();
 
-                            bool billingFound = false;
+
 
                             for (int i = 0; i <= lastIndex; i++)
                             {
                                 if (patientNames[i] == billingInput || patientIDs[i] == billingInput)
                                 {
+                                    billingFound = true;
                                     if (billingAmount[i] > 0)
                                     {
                                         billingFound = true;
                                         Console.WriteLine("----------------------------------------");
-                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR"+ " | Last Visit Date: "+ lastVisitDate[i]+ " | Total Days: "+ daysInHospital[i]);
+                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR" + " | Last Visit Date: " + lastVisitDate[i] + " | Total Days: " + daysInHospital[i]);
                                     }
+                                    else
+                                    {
+                                        Console.WriteLine("No billing records found for " + patientNames[i]);
+                                    }
+                                    break;
                                 }
                             }
 
-                            if (!billingFound)
+                            if (billingFound == false)
                             {
-                                Console.WriteLine("No billing records found for "+ patientNames[lastIndex]);
+                                Console.WriteLine("Patient not found");
                             }
+                            // stop after first match
+
+
+
+
+
                         }
-                        // stop after first match
 
-              
-                        
-                       
-                       
-        
-
-                        break;
+                            break;
 
                     case 10: // Exit
                         //ask user if want to exit the prgram
