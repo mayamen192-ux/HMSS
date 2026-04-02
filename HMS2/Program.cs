@@ -165,7 +165,7 @@ namespace HMS2
                                 {
                                     Console.Write("Doctor Name: ");
                                     assignedDoctors[i] = Console.ReadLine();
-
+                                    //add admission date for admitted patient
                                     Console.Write("Enter the admission date: ");
                                     DateTime admissionDate;
                                     //TryParse tries to convert the text,if successful It stores the result inside admissionDate and return true
@@ -224,7 +224,7 @@ namespace HMS2
                                 }
 
                                 double visitCharges = 0;
-
+                                //add discharge date for admitted patent
                                 Console.Write("Enter the discharge date: ");
                                 DateTime dischargeDate;
 
@@ -404,7 +404,7 @@ namespace HMS2
                         bool doctorFound = false;
                         if (currentDoctor == newDoctor)
                         {
-                            Console.WriteLine(" The names must be different");
+                            Console.WriteLine(" The names of current and new doctors must be different");
                             break;
                         }
                         else
@@ -417,6 +417,7 @@ namespace HMS2
                                     doctorFound = true;
                                     assignedDoctors[i] = newDoctor;
                                     Console.WriteLine("Patient " + patientNames[i] + " has been transferred to " + newDoctor+ "  and Patient last admitted on:"+ lastVisitDate[i]);
+                                    break;
                                 }
                             }
                         }
@@ -537,7 +538,7 @@ namespace HMS2
                                     {
                                         billingFound = true;
                                         Console.WriteLine("----------------------------------------");
-                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR"+ "Last Visit Date: "+ lastVisitDate[i]+ " Total Days: "+ daysInHospital[i]);
+                                        Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR"+ " | Last Visit Date: "+ lastVisitDate[i]+ " | Total Days: "+ daysInHospital[i]);
                                     }
                                 }
                             }
@@ -558,9 +559,10 @@ namespace HMS2
                         break;
 
                     case 10: // Exit
+                        //ask user if want to exit the prgram
                         Console.WriteLine("Are you sure you want to exit? (yes/no)");
                         string confrim = Console.ReadLine().ToLower();
-
+                        
                         if (confrim == "yes")
                         {
                             Console.WriteLine("Exiting system...");
