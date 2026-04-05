@@ -234,8 +234,10 @@ namespace HMS2
                                     dischargeDate = DateTime.Today;
                                 }
 
-                                lastDischargeDate[i] = dischargeDate;
-
+                               lastDischargeDate[i] = dischargeDate;
+                                Console.WriteLine("enter the number of days the patient spent in hospital during this visit:");
+                                int day = int.Parse(Console.ReadLine());
+                                daysInHospital[i] += day;
                                 Console.Write("Was there a consultation fee? (yes/no): ");
                                 string hasFee = Console.ReadLine().ToLower();
 
@@ -272,7 +274,7 @@ namespace HMS2
 
                                 if (visitCharges > 0)
                                 {
-                                    Console.WriteLine("Total charges added this visit: " + visitCharges + " OMR"+ " and  patient's updated total days in hospital:" + dischargeDate);
+                                    Console.WriteLine("Total charges added this visit: " + visitCharges + " OMR"+ " and  patient's updated total days in hospital:"+ daysInHospital[i] + " dischargeDate:"+dischargeDate);
                                 }
                                 else
                                 {
@@ -286,6 +288,7 @@ namespace HMS2
                                 break;
                             }
                         }
+
 
                         if (!dischargeFound)
                         {
