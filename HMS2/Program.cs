@@ -341,7 +341,7 @@ namespace HMS2
                                 bool isAdmitted = true; // or false depending on patient status
                                 string doctorName = "";
 
-                                Console.WriteLine(isAdmitted ? "Doctor: " + doctorName : "Patient is not currently admitted.");
+                                Console.WriteLine(isAdmitted ? "Doctor: " + assignedDoctors[i] : "Patient is not currently admitted.");
 
                                 Console.WriteLine("----------------------------------------");
                                 break;
