@@ -391,57 +391,46 @@ namespace HMS
                         break;
                     case 9:
                         //Billing Report
-                        Console.WriteLine("===== Billing Report =====");
+                        Console.WriteLine("Billing Report:");
                         Console.WriteLine("1. System-wide total");
                         Console.WriteLine("2. Individual patient");
                         Console.Write("Choose option: ");
-                        int option = int.Parse(Console.ReadLine());
+                        int billingOption = int.Parse(Console.ReadLine());
 
-                        switch (option)
+                        if (billingOption == 1)
                         {
-                            case 1://System-wide total
-                                double totalBilling = 0;
-                                for (int i = 0; i <= lastPatientIndex; i++)
+                            double totalBilling = 0;
+
+                            for (int i = 0; i <= lastPatientIndex; i++)
+                            {
+                                totalBilling += billingAmount[i];
+                            }
+
+                            Console.WriteLine("----------------------------------------");
+                            Console.WriteLine("Total billing collected: " + totalBilling + " OMR");
+                        }
+                        else if (billingOption == 2)
+                        {
+                            Console.Write("Enter Patient ID or Name: ");
+                            string billingInput = Console.ReadLine();
+
+                            bool billingFound = false;
+
+                            for (int i = 0; i <= lastPatientIndex; i++)
+                            {
+                                if (patientNames[i] == billingInput || patientIDs[i] == billingInput)
                                 {
-                                    totalBilling += billingAmount[i];
-
+                                    billingFound = true;
+                                    Console.WriteLine("----------------------------------------");
+                                    Console.WriteLine("Billing for " + patientNames[i] + ": " + billingAmount[i] + " OMR");
+                                    break;
                                 }
-                                Console.WriteLine("Total  billing: " + totalBilling + " OMR");
+                            }
 
-
-                                break;
-                            case 2://Individual patient
-                                Console.Write("Enter patient ID or  patient name: ");
-                                string input = Console.ReadLine();
-                                bool found = false;
-                                for (int i = 0; i <= lastPatientIndex; i++)
-                                {
-                                   
-
-                                    if(input == patientIDs[i] ||  input == patientNames[i])
-                                    {
-                                        found = true;
-                                        
-                                        Console.WriteLine("Billing amount for " + patientNames[i] + ": " + billingAmount[i] + " OMR");
-
-                                        break;
-                                    }
-
-
-                              
-                                }
-
-
-                                if (found == false)
-                                {
-                                    Console.WriteLine("No billing records found for this patient");
-                                }
-                                break;
-
-
-                            default:
-                                Console.WriteLine("Invalid option");
-                                break;
+                            if (billingFound == false)
+                            {
+                                Console.WriteLine("No billing records found for this patient");
+                            }
                         }
 
                         break;
