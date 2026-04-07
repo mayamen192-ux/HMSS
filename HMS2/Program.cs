@@ -596,7 +596,7 @@ namespace HMS2
                             Console.Write("Enter Patient ID or Name: ");
                             string billingInput = Console.ReadLine().Trim();
 
-                            double grandTotal = 0;
+                            double billingTotal = 0;
                             double highestBilling = 0;
                             double lowestBilling = 0;
                             bool firstMatch = true; // for initializing highest and lowest billing
@@ -611,7 +611,7 @@ namespace HMS2
                                     billingFound = true;
 
                                     // Add to grand total
-                                    grandTotal += billingAmount[i];
+                                    billingTotal += billingAmount[i];
 
                                     // Initialize or update highest/lowest billing
                                     if (firstMatch)
@@ -641,10 +641,28 @@ namespace HMS2
                             if (billingFound)
                             {
                                 Console.WriteLine("----------------------------------------");
-                                Console.WriteLine("Grand total billing for this patient: " + grandTotal.ToString("0.00") + " OMR");
+                                Console.WriteLine(" total billing for this patient: " + billingTotal.ToString("0.00") + " OMR");
                                 Console.WriteLine("Lowest billing amount: " + lowestBilling.ToString("0.00") + " OMR");
                                 Console.WriteLine("Highest billing amount: " + highestBilling.ToString("0.00") + " OMR");
+                                Random rand = new Random();
+
+                                // Generate random discount between 5 and 20 (inclusive)
+                                int discountPercent = rand.Next(5, 21);
+
+                                // Calculate discount value
+                                double discountAmount = billingAmount[lastIndex] * discountPercent / 100.0;
+
+                                // Calculate final amount after discount
+                                double finalAmount = billingAmount[lastIndex] - discountAmount;
+
+                                // Round final amount to 2 decimal places
+                                finalAmount = Math.Round(finalAmount, 2);
+
+                                // Display results (without modifying original billingAmount)
+                                Console.WriteLine("Discount applied: " + discountPercent + "% — Amount after discount: " + finalAmount + " OMR");
                             }
+
+
                             else
                             {
                                 Console.WriteLine("No billing records found for " + billingInput);
