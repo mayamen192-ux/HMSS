@@ -576,19 +576,23 @@ namespace HMS2
                         }
 
                         bool billingFound = false;
+                        double billingTotal = 0;
+                        double highestBilling = 0;
+                        double lowestBilling = 0;
+                        bool firstMatch = true; // for initializing highest and lowest billing
 
                         if (billingOption == 1)
                         {
                             // System-wide total
                             double totalBilling = 0;
 
-                            for (int i = 0; i < lastIndex; i++)
+                            for (int i = 0; i <= lastIndex; i++)
                             {
                                 totalBilling += billingAmount[i];
                             }
 
                             Console.WriteLine("----------------------------------------");
-                            Console.WriteLine("Total billing collected: " + totalBilling.ToString("0.00") + " OMR");
+                            Console.WriteLine("Total billing collected: " + Math.Round(totalBilling, 2) + " OMR");
                         }
                         else if (billingOption == 2)
                         {
@@ -596,10 +600,7 @@ namespace HMS2
                             Console.Write("Enter Patient ID or Name: ");
                             string billingInput = Console.ReadLine().Trim();
 
-                            double billingTotal = 0;
-                            double highestBilling = 0;
-                            double lowestBilling = 0;
-                            bool firstMatch = true; // for initializing highest and lowest billing
+                           
 
 
                             // Loop through all patients (use <= lastIndex if lastIndex is the last valid index)
