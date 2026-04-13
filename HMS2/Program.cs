@@ -25,9 +25,9 @@ namespace HMS2
         static int lastIndex = -1;
         static int lastDoctorIndex = -1;
 
+      
 
-
-
+        //defined functions:
         static public void seedData()
         {
 
@@ -330,9 +330,9 @@ namespace HMS2
 
                     lastDischargeDate[i] = dischargeDate;
 
-                    // =========================
+                  
                     // Days in hospital
-                    // =========================
+                   
                     Console.Write("Enter number of days: ");
                     if (int.TryParse(Console.ReadLine(), out int day) && day > 0)
                     {
@@ -343,9 +343,9 @@ namespace HMS2
                         Console.WriteLine("Invalid days. Skipped.");
                     }
 
-                    // =========================
+                 
                     // Consultation fee
-                    // =========================
+                  
                     Console.Write("Consultation fee? (yes/no): ");
                     string hasFee = Console.ReadLine()?.Trim().ToLower();
 
@@ -363,9 +363,9 @@ namespace HMS2
                         }
                     }
 
-                    // =========================
+                  
                     // Medication charges
-                    // =========================
+                   
                     Console.Write("Medication charges? (yes/no): ");
                     string hasMeds = Console.ReadLine()?.Trim().ToLower();
 
@@ -383,9 +383,9 @@ namespace HMS2
                         }
                     }
 
-                    // =========================
+                  
                     // NEW STEP — Restore doctor slot
-                    // =========================
+                   
                     string doctorName = assignedDoctors[i];
                     int doctorIndex = -1;
 
@@ -412,9 +412,9 @@ namespace HMS2
                         Console.WriteLine("Warning: assigned doctor not found in registry. Slots not updated.");
                     }
 
-                    // =========================
+                 
                     // Summary output
-                    // =========================
+               
                     Console.WriteLine("----------------------------------------");
 
                     if (visitCharges > 0)
@@ -427,9 +427,9 @@ namespace HMS2
                         Console.WriteLine("No charges recorded.");
                     }
 
-                    // =========================
+                 
                     // Discharge update
-                    // =========================
+                 
                     admitted[i] = false;
                     assignedDoctors[i] = "";
 
@@ -858,16 +858,18 @@ namespace HMS2
                 Console.WriteLine("Warning: assigned doctor not found in registry. Slots not updated.");
             }
         }
+        
+        //Main Method:
         static void Main(string[] args)
         {
-
+            //calling to seed data function
             seedData();
 
             bool exit = false;
 
             while (exit == false)
             {
-
+                //display menue
                 displayMenue();
 
                 int choice = 0;
@@ -930,23 +932,20 @@ namespace HMS2
                         break;
 
 
-
-          
-
                     case 3: // Discharge Patient
-
-               
 
                         Console.Write("Enter Patient ID or Name: ");
                         string dischargeInput = Console.ReadLine()?.Trim();
 
+                        //search if patient found
                         int searchFound3 = searchPatient(dischargeInput);
 
+                        //if patient is not found
                         if (!errorMessage(searchFound3))
                         {
                             break;
                         }
-                        // FIX: pass index instead of string
+                        //  pass index instead of string
                         DischargePatient(patientIDs[searchFound3]);
 
                         break;
@@ -964,7 +963,7 @@ namespace HMS2
                            break; // stop execution safely
                         }
 
-                        // print details
+                        // print details of patients
                         printPatientDetails(searchFound);
 
                         break;
@@ -992,8 +991,8 @@ namespace HMS2
                         Console.Write("Filter by name keyword (press Enter to skip): ");
                         string keyword = Console.ReadLine();
 
+                        //show all admitted patients
                         ShowAdmittedPatients(keyword);
-
 
                         break;
 
@@ -1082,8 +1081,10 @@ namespace HMS2
                             Console.Write("Enter Patient ID or Name: ");
                             string billingInput = Console.ReadLine().Trim();
 
+                            //search of the patient
                             int billingIndex = searchPatient(billingInput);
 
+                            //check if patient is not found
                             if (!errorMessage(billingIndex))
                             {
                                 break;
@@ -1099,12 +1100,11 @@ namespace HMS2
                         break;
 
 
-
-
                     case 10://Add Doctor
                         //calling this function
                         RegisterDoctor();
                         break;
+
                     case 11://Doctor Salary Report
                         //here calling defined function to work 
                         GenerateDoctorSalaryReport();
