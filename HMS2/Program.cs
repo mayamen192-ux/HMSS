@@ -31,7 +31,6 @@ namespace HMS2
         static public void seedData()
         {
 
-
             //patient 1
             lastIndex++;
             patientNames[lastIndex] = "Ali Hassan";
@@ -442,7 +441,6 @@ namespace HMS2
             Console.WriteLine("Patient not found.");
             return -1;
         }
-
         static public void ShowAdmittedPatients(string keyword)
         {
             if (keyword != null)
@@ -765,99 +763,7 @@ namespace HMS2
                                   " — " + Convert.ToString(highestSalary) + " OMR");
             }
         }
-        static public void AdmitPatientToDoctor(int patientIndex)
-        {
-            if (patientIndex < 0 || patientIndex >= lastIndex)
-            {
-                Console.WriteLine("Invalid patient index.");
-                return;
-            }
-
-            Console.Write("Doctor Name: ");
-            string doctorInput = Console.ReadLine()?.Trim();
-
-            if (string.IsNullOrEmpty(doctorInput))
-            {
-                Console.WriteLine("Invalid input. Admission cancelled.");
-                return;
-            }
-
-            // Step 1 — Search doctorNames array (case-insensitive)
-            int doctorIndex = -1;
-            for (int i = 0; i < lastDoctorIndex; i++)
-            {
-                if (!string.IsNullOrEmpty(doctorNames[i]) &&
-                    doctorNames[i].ToLower() == doctorInput.ToLower())
-                {
-                    doctorIndex = i;
-                    break;
-                }
-            }
-
-            if (doctorIndex == -1)
-            {
-                Console.WriteLine("Doctor not found in the system. Please register the doctor first.");
-                return; // exit without admitting patient
-            }
-
-            // Step 2 — Check available slots
-            if (doctorAvailableSlots[doctorIndex] <= 0)
-            {
-                Console.WriteLine($"Dr. {doctorNames[doctorIndex]} has no available slots at this time.");
-                return; // exit without admitting patient
-            }
-
-            // Step 3 — Admit patient and update registry
-            admitted[patientIndex] = true;
-            assignedDoctors[patientIndex] = doctorNames[doctorIndex];
-
-            // Update doctor stats
-            doctorAvailableSlots[doctorIndex] -= 1;
-            doctorVisitCount[doctorIndex] += 1;
-
-            Console.WriteLine($"Patient {patientNames[patientIndex]} admitted successfully.");
-            Console.WriteLine($"Dr. {doctorNames[doctorIndex]} now has {doctorAvailableSlots[doctorIndex]} slot(s) remaining.");
-        }
-        static public void UpdateDoctorSlotsOnDischarge(int patientIndex)
-        {
-            if (patientIndex < 0 || patientIndex >= lastIndex)
-            {
-                Console.WriteLine("Invalid patient index.");
-                return;
-            }
-
-            string assignedDoctor = assignedDoctors[patientIndex];
-
-            if (string.IsNullOrEmpty(assignedDoctor))
-            {
-                Console.WriteLine("No doctor was assigned to this patient.");
-                return;
-            }
-
-            // Search doctorNames array for a case-insensitive match
-            int doctorIndex = -1;
-            for (int i = 0; i < lastDoctorIndex; i++)
-            {
-                if (!string.IsNullOrEmpty(doctorNames[i]) &&
-                    doctorNames[i].ToLower() == assignedDoctor.ToLower())
-                {
-                    doctorIndex = i;
-                    break;
-                }
-            }
-
-            if (doctorIndex >= 0)
-            {
-                // Increment available slots
-                doctorAvailableSlots[doctorIndex] += 1;
-                Console.WriteLine($"Dr. {doctorNames[doctorIndex]} now has {doctorAvailableSlots[doctorIndex]} slot(s) available.");
-            }
-            else
-            {
-                // Doctor not found in registry
-                Console.WriteLine("Warning: assigned doctor not found in registry. Slots not updated.");
-            }
-        }
+       
         
         //Main Method:
         static void Main(string[] args)
@@ -876,9 +782,10 @@ namespace HMS2
 
                 try
                 {
-
+                    //input user to choose option from the menue
                     choice = int.Parse(Console.ReadLine());
                 }
+                //handle the error
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
@@ -890,19 +797,12 @@ namespace HMS2
 
                     case 1: // Register New Patient
                  
-
                         Console.Write("Patient Name: ");
                         string patientName = Console.ReadLine().Trim();
-
-                        //Console.Write("Patient ID: ");
-                        //patientIDs[lastIndex] = Console.ReadLine();
-
                         Console.Write("Diagnosis: ");
                         string diagnose = Console.ReadLine().Trim();
-
                         Console.Write("Department: ");
                         string department = Console.ReadLine().Trim();
-
                         Console.Write("Blood Type: ");
                         string bloodTypes = Console.ReadLine().Trim().ToUpper();
 
@@ -914,10 +814,10 @@ namespace HMS2
 
                     case 2: // Admit Patient
 
-           
                         Console.Write("Enter Patient ID or Name: ");
                         string admitInput = Console.ReadLine()?.Trim();
 
+                        //search the patient
                         int patientIndex = searchPatient(admitInput);
 
                         // check if patient exists
@@ -930,7 +830,6 @@ namespace HMS2
                         AdmitPatient(patientIndex);
 
                         break;
-
 
                     case 3: // Discharge Patient
 
