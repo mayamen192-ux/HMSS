@@ -4,8 +4,8 @@ using System.Reflection;
 namespace HMS2
 {
     internal class Program
-    { // global storage
-
+    { 
+        // global storage
         const int MAX_PATIENTS = 100;
         const int MAX_DOCTORS = 50;
         static string[] patientNames = new string[MAX_PATIENTS];
@@ -14,24 +14,18 @@ namespace HMS2
         static bool[] admitted = new bool[MAX_PATIENTS];
         static string[] assignedDoctors = new string[MAX_PATIENTS];
         static string[] departments = new string[MAX_PATIENTS];
-     
-        
         static int[] visitCount = new int[MAX_PATIENTS];
         static double[] billingAmount = new double[MAX_PATIENTS];
-
         static DateTime[] lastVisitDate = new DateTime[MAX_PATIENTS];
         static DateTime[] lastDischargeDate = new DateTime[MAX_PATIENTS];
         static int[] daysInHospital = new int[MAX_PATIENTS];
         static string[] bloodType = new string[MAX_PATIENTS];
-
         static string[] doctorNames = new string[MAX_DOCTORS];
         static int[] doctorAvailableSlots = new int[MAX_DOCTORS];
         static int[] doctorVisitCount = new int[MAX_DOCTORS];
         static int lastIndex = -1;
         static int lastDoctorIndex = -1;
-
-
-
+/////////////////////////////////////////////////////////////////////////////////
         //defined functions:
         /// <summary>
         /// Initializes the system with default sample data for patients and doctors
@@ -371,7 +365,7 @@ namespace HMS2
         /// </returns>
         static public int DischargePatient(int i)
         {
-            if (i < 0 || i > lastIndex)
+            if (i < 0 || i >= lastIndex)
             {
                 Console.WriteLine("Invalid patient index.");
                 return -1;
@@ -477,7 +471,7 @@ namespace HMS2
             int admittedCounter = 0;
             double highestBillingAmount = 0;
 
-            for (int i = 0; i < lastIndex; i++)
+            for (int i = 0; i <= lastIndex; i++)
             {
                 if (!admitted[i])
                     continue;
@@ -592,6 +586,7 @@ namespace HMS2
                     Console.WriteLine("Patient " + patientNames[i] +
                                       " has been transferred to " + newDoctor +
                                       " | Last admitted on: " + lastVisitDate[i]);
+                    break;
                 }
             }
 
@@ -630,7 +625,7 @@ namespace HMS2
             string[] depts = new string[lastIndex];
             string[] doctors = new string[lastIndex];
 
-            for (int i = 0; i < lastIndex; i++)
+            for (int i = 0; i <= lastIndex; i++)
             {
                 visits[i] = visitCount[i];
                 names[i] = patientNames[i];
@@ -640,9 +635,9 @@ namespace HMS2
             }
 
             //  Bubble Sort (Descending)
-            for (int i = 0; i < lastIndex - 1; i++)
+            for (int i = 0; i <= lastIndex - 1; i++)
             {
-                for (int j = 0; j < lastIndex - i - 1; j++)
+                for (int j = 0; j <= lastIndex - i - 1; j++)
                 {
                     if (visits[j] < visits[j + 1])
                     {
@@ -676,7 +671,7 @@ namespace HMS2
             // Display sorted results
             bool hasVisits = false;
 
-            for (int i = 0; i < lastIndex; i++)
+            for (int i = 0; i <= lastIndex; i++)
             {
                 if (visits[i] == 0) break;
 
@@ -713,7 +708,7 @@ namespace HMS2
             Console.WriteLine("Patients in department '" + searchDept.ToUpper() + "':");
             Console.WriteLine("----------------------------------------");
 
-            for (int i = 0; i < lastIndex; i++)
+            for (int i = 0; i <= lastIndex; i++)
             {
                 if (!string.IsNullOrEmpty(departments[i]) &&
                     departments[i].ToLower().Contains(searchDept.ToLower()))
@@ -934,7 +929,11 @@ namespace HMS2
                                   " — " + Convert.ToString(highestSalary) + " OMR");
             }
         }
-       
+
+       /// <summary>
+       /// /////////////////////////////////////////////////////////
+       /// </summary>
+       /// <param name="args"></param>
         
         //Main Method:
         static void Main(string[] args)
@@ -964,7 +963,6 @@ namespace HMS2
 
                 switch (choice)
                 {
-
                     case 1: // Register New Patient
 
                         Console.Write("Patient Name: ");
@@ -1082,23 +1080,25 @@ namespace HMS2
 
                 
                     case 6: // Transfer Patient to Another Doctor
-                        static void TransferPatientsToNewDoctor(string currentDoctor, string newDoctor)
+                  
+                        Console.Write("Enter current doctor name: ");
+                        string currentDoctor = Console.ReadLine()?.Trim() ?? string.Empty;
+
+                        Console.Write("Enter new doctor name: ");
+                        string newDoctor = Console.ReadLine()?.Trim() ?? string.Empty;
+
+                        if (!string.IsNullOrWhiteSpace(currentDoctor) &&
+                            !string.IsNullOrWhiteSpace(newDoctor))
                         {
-                            for (int i = 0; i <= lastIndex; i++)
-                            {
-                                if (admitted[i] &&
-                                    assignedDoctors[i].Equals(currentDoctor, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    // Transfer patient
-                                    assignedDoctors[i] = newDoctor;
+                            TransferPatientsToNewDoctor(currentDoctor, newDoctor);
 
-                                    Console.WriteLine("Patient transferred to Dr. " + newDoctor);
-
-                                    // stop after first match
-                                    break;
-                                }
-                            }
+ 
                         }
+                        else
+                        {
+                            Console.WriteLine("Both doctor names must be provided.");
+                        }
+                    
                         break;
 
                    
@@ -1108,13 +1108,9 @@ namespace HMS2
                         ShowMostVisitedPatients();
                         break;
 
-
                     case 8: // Search Patients by Department
-                     
-
                         //calling this defined function
                         ShowPatientsByDepartment();
-
                         break;
 
                     case 9: // Billing Report
@@ -1186,17 +1182,20 @@ namespace HMS2
                         GenerateDoctorSalaryReport();
                         break;
             
-                    case 12:
+                    case 12://exist the program
                         if (ConfirmExit())
                         {
                             exit = true;   
                         }
                         break;
-                       
+
+                    // Handles any menu choice that does not match defined cases
+                    // Displays an error message and returns control to the menu
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
                         break;
                 }
+                ////////////////////////The End of the switch/////////////////////////////
 
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
