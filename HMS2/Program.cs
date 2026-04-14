@@ -25,6 +25,7 @@ namespace HMS2
         static int[] doctorVisitCount = new int[MAX_DOCTORS];
         static int lastIndex = -1;
         static int lastDoctorIndex = -1;
+
 /////////////////////////////////////////////////////////////////////////////////
         //defined functions:
         /// <summary>
@@ -1091,8 +1092,6 @@ namespace HMS2
                             !string.IsNullOrWhiteSpace(newDoctor))
                         {
                             TransferPatientsToNewDoctor(currentDoctor, newDoctor);
-
- 
                         }
                         else
                         {
@@ -1100,8 +1099,7 @@ namespace HMS2
                         }
                     
                         break;
-
-                   
+              
                     case 7: // View Most Visited Patients
                         Console.WriteLine("Most Visited Patients (by visit count):");
                         Console.WriteLine("----------------------------------------");
@@ -1171,8 +1169,7 @@ namespace HMS2
 
                         break;
 
-
-                    case 10://Add Doctor
+             case 10://Add Doctor
                         //calling this function
                         RegisterDoctor();
                         break;
