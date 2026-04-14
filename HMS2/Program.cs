@@ -14,6 +14,8 @@ namespace HMS2
         static bool[] admitted = new bool[MAX_PATIENTS];
         static string[] assignedDoctors = new string[MAX_PATIENTS];
         static string[] departments = new string[MAX_PATIENTS];
+     
+        
         static int[] visitCount = new int[MAX_PATIENTS];
         static double[] billingAmount = new double[MAX_PATIENTS];
 
@@ -148,7 +150,7 @@ namespace HMS2
            
             //  check capacity
           
-            if (lastIndex >= 99)
+            if (lastIndex >= MAX_PATIENTS - 1)
             {
                 Console.WriteLine("Error: Patient storage is full. Cannot register more patients.");
                 return null;
@@ -287,7 +289,7 @@ namespace HMS2
 
             int doctorIndex = -1;
 
-            for (int i = 0; i < lastDoctorIndex; i++)
+            for (int i = 0; i <= lastDoctorIndex; i++)
             {
                 if (!string.IsNullOrEmpty(doctorNames[i]) &&
                     doctorNames[i].ToLower() == doctorInput.ToLower())
@@ -841,7 +843,7 @@ namespace HMS2
           
             //check capacity
           
-            if (lastDoctorIndex >= 99)
+            if (lastDoctorIndex >= MAX_DOCTORS - 1)
             {
                 Console.WriteLine("Error: Doctor storage is full. Cannot register more doctors.");
                 return;
@@ -899,13 +901,13 @@ namespace HMS2
             int highestIndex = -1;
 
             // Loop through all registered doctors
-            for (int i = 0; i < lastDoctorIndex; i++)
+            for (int i = 0; i <= lastDoctorIndex; i++)
             {
                 string name = string.IsNullOrEmpty(doctorNames[i]) ? "N/A" : doctorNames[i];
                 int visits = doctorVisitCount[i];
                 int slots = doctorAvailableSlots[i];
 
-                // Salary formula: base 500 + 50 per visit
+                // Salary formula: base 300 + (15 * visits)
                 double salary = 300 + (15 * visits);
                 salary = Math.Round(salary, 2);
 
@@ -983,7 +985,7 @@ namespace HMS2
                             string.IsNullOrWhiteSpace(department))
                         {
                             Console.WriteLine("Error: Name, Diagnosis, and Department cannot be empty.");
-                            return;
+                            break;
                         }
 
                         // call function
@@ -1080,53 +1082,22 @@ namespace HMS2
 
                 
                     case 6: // Transfer Patient to Another Doctor
-                        Console.Write("Enter current doctor name: ");
-                        string currentDoctor = Console.ReadLine()?.Trim() ?? string.Empty;
-
-                        Console.Write("Enter new doctor name: ");
-                        string newDoctor = Console.ReadLine()?.Trim() ?? string.Empty;
-
-                        if (!string.IsNullOrWhiteSpace(currentDoctor) &&
-                            !string.IsNullOrWhiteSpace(newDoctor))
+                        static void TransferPatientsToNewDoctor(string currentDoctor, string newDoctor)
                         {
-                           
-                            // chek if new doctor exit
-                           
-                            bool newDoctorExists = false;
-
-                            for (int d = 0; d <= lastDoctorIndex; d++)
-                            {
-                                if (!string.IsNullOrEmpty(doctorNames[d]) &&
-                                    doctorNames[d].Equals(newDoctor, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    newDoctorExists = true;
-                                    break;
-                                }
-                            }
-
-                            if (!newDoctorExists)
-                            {
-                                Console.WriteLine("Error: New doctor does not exist in the system.");
-                                break;
-                            }
-
-                            Console.WriteLine("\nPatients under Dr. " + currentDoctor + ":");
-
                             for (int i = 0; i <= lastIndex; i++)
                             {
                                 if (admitted[i] &&
-                                    string.Equals(assignedDoctors[i], currentDoctor, StringComparison.OrdinalIgnoreCase))
+                                    assignedDoctors[i].Equals(currentDoctor, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    printPatientDetails(i);
+                                    // Transfer patient
+                                    assignedDoctors[i] = newDoctor;
+
+                                    Console.WriteLine("Patient transferred to Dr. " + newDoctor);
+
+                                    // stop after first match
+                                    break;
                                 }
                             }
-
-                            TransferPatientsToNewDoctor(currentDoctor, newDoctor);
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Both doctor names must be provided.");
                         }
                         break;
 
