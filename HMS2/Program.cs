@@ -21,9 +21,10 @@ namespace HMS2
            static List<string> doctorNames = new List<string>();
            static List<int> doctorAvailableSlots = new List<int>();
            static List<int> doctorVisitCount = new List<int>();
-       
+           static Random rand = new Random();
+
         /////////////////////////////////////////////////////////////////////////////////
-     
+
         //defined functions:
         /// <summary>
         /// Initializes the system with default sample data for patients and doctors
@@ -45,7 +46,7 @@ namespace HMS2
             billingAmount.Add(0);
             lastVisitDate.Add(DateTime.Parse("2025-01-10"));
             lastDischargeDate.Add(DateTime.Parse("2025-01-15"));
-            daysInHospital.Add(12);
+            daysInHospital.Add(5);
            
 
             //Doctor 1
@@ -66,7 +67,7 @@ namespace HMS2
               billingAmount.Add(0);
               lastVisitDate.Add(DateTime.Parse("2025-03-02"));
               lastDischargeDate.Add(DateTime.Parse("2025-03-04"));
-              daysInHospital.Add(8);
+              daysInHospital.Add(1);
              
 
             //Doctor 2
@@ -86,7 +87,7 @@ namespace HMS2
               billingAmount.Add(0);
               lastVisitDate.Add(DateTime.Parse("2024-12-20"));
               lastDischargeDate.Add(DateTime.Parse("2024-12-28"));
-              daysInHospital.Add(5);
+              daysInHospital.Add(8);
              
 
             //Doctor 3
@@ -542,6 +543,27 @@ namespace HMS2
             }
         }
         /// <summary>
+        /// Normalizes a doctor's name into a consistent format.
+        /// Converts input to lowercase, removes any existing "dr" or "dr." prefix,
+        /// trims extra spaces, and returns the name in the format "Dr. Name"
+        /// with proper title casing.
+        /// </summary>
+        /// <param name="name">
+        /// The input doctor name provided by the user. It may include variations
+        /// such as "dr noor", "Dr. noor", or extra spaces.
+        /// </param>
+        /// <returns>
+        /// A formatted doctor name in the standard form "Dr. Name".
+        /// Returns an empty string if the input is null, empty, or whitespace.
+        /// </returns>
+        static public string NormalizeDoctorName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return "";
+
+            name = name.ToLower().Replace("dr.", "").Replace("dr", "").Trim();
+            return "Dr. " + System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
+        }
+        /// <summary>
         /// Transfers all admitted patients from one doctor to another and updates doctor slot availability.
         /// </summary>
         /// <param name="currentDoctor">
@@ -562,9 +584,8 @@ namespace HMS2
             }
 
             // normalize names
-            currentDoctor = currentDoctor.Replace("Dr ", "Dr. ");
-            newDoctor = newDoctor.Replace("Dr ", "Dr. ");
-
+            currentDoctor = NormalizeDoctorName(currentDoctor);
+            newDoctor = NormalizeDoctorName(newDoctor);
             if (string.Equals(currentDoctor, newDoctor, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine("The names of current and new doctors must be different.");
@@ -585,6 +606,12 @@ namespace HMS2
                     int oldDoctorIndex = -1;
                     int newDoctorIndex = -1;
 
+                    if (!doctorNames.Contains(newDoctor))
+                    {
+                        Console.WriteLine("New doctor does not exist.");
+                        return;
+                    }
+
                     //  List.Count instead of lastDoctorIndex
                     for (int d = 0; d < doctorNames.Count; d++)
                     {
@@ -602,6 +629,7 @@ namespace HMS2
                     // new doctor -1 slot
                     if (newDoctorIndex != -1 && doctorAvailableSlots[newDoctorIndex] > 0)
                         doctorAvailableSlots[newDoctorIndex]--;
+
                     else if (newDoctorIndex != -1)
                         Console.WriteLine("Warning: New doctor has no available slots left.");
 
@@ -757,6 +785,13 @@ namespace HMS2
             double highestBilling = billingAmount[0];
             double lowestBilling = billingAmount[0];
 
+            //If there are no patients
+            if (billingAmount.Count == 0)
+            {
+                Console.WriteLine("No billing data available.");
+                return;
+            }
+
             // List.Count instead of lastIndex
             for (int i = 1; i < patientNames.Count; i++)
             {
@@ -799,11 +834,12 @@ namespace HMS2
 
             double billingTotal = billingAmount[billingIndex];
 
-            Random rand = new Random();
             int discountPercent = rand.Next(5, 21);
 
             double discountAmount = billingTotal * discountPercent / 100.0;
             double finalAmount = Math.Round(billingTotal - discountAmount, 2);
+
+            billingAmount[billingIndex] = finalAmount;
 
             Console.WriteLine("Discount applied: " + discountPercent + "%");
             Console.WriteLine("Final amount after discount: " + finalAmount.ToString("0.00") + " OMR");
@@ -834,6 +870,7 @@ namespace HMS2
             }
 
         }
+        
         /// <summary>
         /// Registers a new doctor in the system and initializes their available slots and visit count.
         /// </summary>
@@ -843,6 +880,7 @@ namespace HMS2
         /// <returns>
         /// This method does not return a value (void). It updates doctor lists and prints confirmation messages to the console.
         /// </returns>
+        /// 
         static public void RegisterDoctor()
         {
             Console.Write("Enter Doctor Name: ");
@@ -959,7 +997,7 @@ namespace HMS2
                 //handle the error
                 catch (FormatException)
                 {
-                    Console.WriteLine("Invalid input. Please choose a number from 1 to 10.");
+                    Console.WriteLine("Invalid input. Please choose a number from 1 to 12.");
                 }
 
                 switch (choice)
