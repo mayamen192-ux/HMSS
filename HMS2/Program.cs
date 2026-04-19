@@ -6,22 +6,22 @@ namespace HMS2
     internal class Program
     {
         // global storage
-           static List<string> patientNames = new List<string>();
-           static List<string> patientIDs = new List<string>();
-           static List<string> diagnoses = new List<string>();
-           static List<bool> admitted = new List<bool>();
-           static List<string> assignedDoctors = new List<string>();
-           static List<string> departments = new List<string>();
-           static List<int> visitCount = new List<int>();
-           static List<double> billingAmount = new List<double>();
-           static List<DateTime> lastVisitDate = new List<DateTime>();
-           static List<DateTime> lastDischargeDate = new List<DateTime>();
-           static List<int> daysInHospital = new List<int>();
-           static List<string> bloodType = new List<string>();
-           static List<string> doctorNames = new List<string>();
-           static List<int> doctorAvailableSlots = new List<int>();
-           static List<int> doctorVisitCount = new List<int>();
-           static Random rand = new Random();
+        static List<string> patientNames = new List<string>();
+        static List<string> patientIDs = new List<string>();
+        static List<string> diagnoses = new List<string>();
+        static List<bool> admitted = new List<bool>();
+        static List<string> assignedDoctors = new List<string>();
+        static List<string> departments = new List<string>();
+        static List<int> visitCount = new List<int>();
+        static List<double> billingAmount = new List<double>();
+        static List<DateTime> lastVisitDate = new List<DateTime>();
+        static List<DateTime> lastDischargeDate = new List<DateTime>();
+        static List<int> daysInHospital = new List<int>();
+        static List<string> bloodType = new List<string>();
+        static List<string> doctorNames = new List<string>();
+        static List<int> doctorAvailableSlots = new List<int>();
+        static List<int> doctorVisitCount = new List<int>();
+        static Random rand = new Random();
 
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -47,53 +47,53 @@ namespace HMS2
             lastVisitDate.Add(DateTime.Parse("2025-01-10"));
             lastDischargeDate.Add(DateTime.Parse("2025-01-15"));
             daysInHospital.Add(5);
-           
+
 
             //Doctor 1
-              doctorNames.Add("Dr. Noor");
-              doctorAvailableSlots.Add(5);
-              doctorVisitCount.Add(0);
+            doctorNames.Add("Dr. Noor");
+            doctorAvailableSlots.Add(5);
+            doctorVisitCount.Add(0);
 
 
             //patient 2
-              patientNames.Add("Sara Ahmed");
-              patientIDs.Add("P002");
-              diagnoses.Add("Flu");
-              departments.Add("Orthopedics");
-              bloodType.Add("O-");
-              admitted.Add(true);
-              assignedDoctors.Add("Dr. Noor");
-              visitCount.Add(4);
-              billingAmount.Add(0);
-              lastVisitDate.Add(DateTime.Parse("2025-03-02"));
-              lastDischargeDate.Add(DateTime.Parse("2025-03-04"));
-              daysInHospital.Add(1);
-             
+            patientNames.Add("Sara Ahmed");
+            patientIDs.Add("P002");
+            diagnoses.Add("Flu");
+            departments.Add("Orthopedics");
+            bloodType.Add("O-");
+            admitted.Add(true);
+            assignedDoctors.Add("Dr. Noor");
+            visitCount.Add(4);
+            billingAmount.Add(0);
+            lastVisitDate.Add(DateTime.Parse("2025-03-02"));
+            lastDischargeDate.Add(DateTime.Parse("2025-03-04"));
+            daysInHospital.Add(1);
+
 
             //Doctor 2
-              doctorNames.Add("Dr. Salem");
-              doctorAvailableSlots.Add(3);
-              doctorVisitCount.Add(0);
+            doctorNames.Add("Dr. Salem");
+            doctorAvailableSlots.Add(3);
+            doctorVisitCount.Add(0);
 
             //patient 3
-              patientNames.Add("Omar Khalid");
-              patientIDs.Add("P003");
-              diagnoses.Add("Diabetes");
-              departments.Add("Cardiology");
-              bloodType.Add("B+");
-              admitted.Add(false);
-              assignedDoctors.Add("");
-              visitCount.Add(1);
-              billingAmount.Add(0);
-              lastVisitDate.Add(DateTime.Parse("2024-12-20"));
-              lastDischargeDate.Add(DateTime.Parse("2024-12-28"));
-              daysInHospital.Add(8);
-             
+            patientNames.Add("Omar Khalid");
+            patientIDs.Add("P003");
+            diagnoses.Add("Diabetes");
+            departments.Add("Cardiology");
+            bloodType.Add("B+");
+            admitted.Add(false);
+            assignedDoctors.Add("");
+            visitCount.Add(1);
+            billingAmount.Add(0);
+            lastVisitDate.Add(DateTime.Parse("2024-12-20"));
+            lastDischargeDate.Add(DateTime.Parse("2024-12-28"));
+            daysInHospital.Add(8);
+
 
             //Doctor 3
-              doctorNames.Add("Dr. Hana");
-              doctorAvailableSlots.Add(8);
-              doctorVisitCount.Add(0);
+            doctorNames.Add("Dr. Hana");
+            doctorAvailableSlots.Add(8);
+            doctorVisitCount.Add(0);
 
 
         }
@@ -200,7 +200,7 @@ namespace HMS2
             return -1;
         }
 
-        
+
 
         /// <summary>
         /// Prints all stored details of a patient, including personal information,
@@ -583,74 +583,67 @@ namespace HMS2
                 return;
             }
 
-            // normalize names
-            currentDoctor = NormalizeDoctorName(currentDoctor);
-            newDoctor = NormalizeDoctorName(newDoctor);
-            if (string.Equals(currentDoctor, newDoctor, StringComparison.OrdinalIgnoreCase))
+            // normalize ONLY for comparison
+            string currentInput = NormalizeDoctorName(currentDoctor);
+            string newInput = NormalizeDoctorName(newDoctor);
+            
+            if (currentInput.Equals(newInput, StringComparison.OrdinalIgnoreCase))
             {
                 Console.WriteLine("The names of current and new doctors must be different.");
+                return;
+            }
+
+            // find doctors using system list (source of truth)
+            int oldDoctorIndex = doctorNames.FindIndex(d =>
+                NormalizeDoctorName(d).Equals(currentInput, StringComparison.OrdinalIgnoreCase));
+
+            int newDoctorIndex = doctorNames.FindIndex(d =>
+                NormalizeDoctorName(d).Equals(newInput, StringComparison.OrdinalIgnoreCase));
+
+            if (newDoctorIndex == -1)
+            {
+                Console.WriteLine("New doctor does not exist.");
                 return;
             }
 
             bool doctorFound = false;
             int transferCount = 0;
 
-            //List.Count instead of lastIndex
             for (int i = 0; i < patientNames.Count; i++)
             {
                 if (admitted[i] &&
-                    string.Equals(assignedDoctors[i], currentDoctor, StringComparison.OrdinalIgnoreCase))
+                    NormalizeDoctorName(assignedDoctors[i])
+                        .Equals(currentInput, StringComparison.OrdinalIgnoreCase))
                 {
                     doctorFound = true;
 
-                    int oldDoctorIndex = -1;
-                    int newDoctorIndex = -1;
-
-                    if (!doctorNames.Contains(newDoctor))
-                    {
-                        Console.WriteLine("New doctor does not exist.");
-                        return;
-                    }
-
-                    //  List.Count instead of lastDoctorIndex
-                    for (int d = 0; d < doctorNames.Count; d++)
-                    {
-                        if (doctorNames[d].Equals(currentDoctor, StringComparison.OrdinalIgnoreCase))
-                            oldDoctorIndex = d;
-
-                        if (doctorNames[d].Equals(newDoctor, StringComparison.OrdinalIgnoreCase))
-                            newDoctorIndex = d;
-                    }
-
-                    // old doctor +1 slot
-                    if (oldDoctorIndex != -1)
-                        doctorAvailableSlots[oldDoctorIndex]++;
-
-                    // new doctor -1 slot
-                    if (newDoctorIndex != -1 && doctorAvailableSlots[newDoctorIndex] > 0)
-                        doctorAvailableSlots[newDoctorIndex]--;
-
-                    else if (newDoctorIndex != -1)
-                        Console.WriteLine("Warning: New doctor has no available slots left.");
-
-                    // transfer patient
-                    assignedDoctors[i] = newDoctor;
+                    // store ORIGINAL system doctor name (not normalized input)
+                    assignedDoctors[i] = doctorNames[newDoctorIndex];
                     transferCount++;
 
                     Console.WriteLine("Patient " + patientNames[i] +
-                                      " has been transferred to " + newDoctor +
+                                      " transferred to " + doctorNames[newDoctorIndex] +
                                       " | Last admitted on: " + lastVisitDate[i]);
                 }
             }
 
-            if (!doctorFound)
+            // update slots ONCE
+            if (doctorFound)
             {
-                Console.WriteLine("No admitted patients found under this doctor.");
+                if (oldDoctorIndex != -1)
+                    doctorAvailableSlots[oldDoctorIndex]++;
+
+                if (doctorAvailableSlots[newDoctorIndex] > 0)
+                    doctorAvailableSlots[newDoctorIndex]--;
+                else
+                    Console.WriteLine("Warning: New doctor has no available slots left.");
+
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine("Total patients transferred: " + transferCount);
             }
             else
             {
-                Console.WriteLine("----------------------------------------");
-                Console.WriteLine("Total patients transferred: " + transferCount);
+                Console.WriteLine("No admitted patients found under this doctor.");
             }
         }
         /// <summary>
@@ -691,7 +684,7 @@ namespace HMS2
             foreach (int i in indexes)
             {
                 if (visitCount[i] == 0)
-                    break;
+                    continue;
 
                 Console.WriteLine("Name: " + patientNames[i] + " | ID: " + patientIDs[i]);
                 Console.WriteLine("Total Visits: " + visitCount[i]);
@@ -782,15 +775,17 @@ namespace HMS2
 
             double billingTotal = billingAmount[billingIndex];
 
-            double highestBilling = billingAmount[0];
-            double lowestBilling = billingAmount[0];
-
             //If there are no patients
             if (billingAmount.Count == 0)
             {
                 Console.WriteLine("No billing data available.");
                 return;
             }
+
+            double highestBilling = billingAmount[0];
+            double lowestBilling = double.MaxValue;
+
+           
 
             // List.Count instead of lastIndex
             for (int i = 1; i < patientNames.Count; i++)
@@ -870,7 +865,7 @@ namespace HMS2
             }
 
         }
-        
+
         /// <summary>
         /// Registers a new doctor in the system and initializes their available slots and visit count.
         /// </summary>
@@ -1169,7 +1164,7 @@ namespace HMS2
                             break; // exit or loop back to ask again
                         }
 
-                        
+
 
                         if (billingOption == 1)
                         {
